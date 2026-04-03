@@ -21,6 +21,13 @@ class IngredientTypes(StrEnum):
     SEASONING = 'seasoning'
     PACKAGING = 'packaging'
 
+class MenuItemTypes(StrEnum):
+    FRIED_CHICKEN_WHOLE = 'whole fried chicken'
+    FRIED_CHICKEN_WING = 'fried chicken wing'
+    FRIED_CHICKEN_LEG = 'friend chicken leg'
+
+
+
 class BaseMenuItem(BaseModel):
     """
     Base class for all menu items
@@ -30,6 +37,7 @@ class BaseMenuItem(BaseModel):
     name: str
     icon: str
     wholesale_price: Annotated[float, Field(description="retailer price per unit")]
+    manu_price: Annotated[float, Field(description="customer price per unit")]
     ingredients: dict[IngredientTypes, float]  # qty in standardised units per item produced
     waste: Annotated[float, Field(description="waste in standardised units per item produced")]
     corporate_name: str
