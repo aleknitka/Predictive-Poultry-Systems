@@ -1,0 +1,9 @@
+{
+  "model_profile": "gemini-1.5-pro-002",
+  "research_agent": "gsd-phase-researcher",
+  "plan_check_agent": "gsd-plan-checker",
+  "verifier_agent": "gsd-verifier",
+  "branching": "branch-based-development-feat/*-phase/*",
+  "default_branch": "main",
+  "context_budget": 0.5
+}
