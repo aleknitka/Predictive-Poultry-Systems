@@ -4,19 +4,19 @@
 
 **Core Value**: High-fidelity Digital Twin simulation to optimize poultry fulfillment nodes.
 
-**Current Focus**: Phase 3 Agentic Workforce & Logistics.
+**Current Focus**: Phase 4 Cycle Integration.
 
 ## Current Position
 
 **Phase**: 4
-**Plan**: TBD
-**Status**: Phase 3 complete. Ready to plan Phase 4: Cycle Integration.
+**Plan**: 04-01
+**Status**: Phase 4 planned (2 plans). Ready to execute 04-01: Agent Behavioral Lifecycle Logic.
 
 ```mermaid
 pie title Project Progress
     "Completed" : 67
-    "In Progress" : 0
-    "Remaining" : 33
+    "In Progress" : 10
+    "Remaining" : 23
 ```
 
 ## Performance Metrics
@@ -33,18 +33,19 @@ pie title Project Progress
 - [D-05] pydantic-ai as the LLM interface (v1.77.0).
 - [D-06] Provider-agnostic inference support using OpenAIChatModel and OpenAIProvider.
 - [D-07] BT integrated with Pydantic models.
+- [D-08] Simulation uses salabim.Component for agent lifecycle.
 
 ### Todos
-- [ ] Create Phase 4 plan.
-- [ ] Implement end-to-end fulfillment loop (arrival -> ordering -> cooking -> delivery).
-- [ ] Integrate facility resources (queues, machines) with agent behaviors.
+- [ ] Execute Phase 4 plans (04-01, 04-02).
+- [ ] Implement full cycle: Arrival -> Ordering -> Cooking -> Delivery.
+- [ ] Integrate facility resources with agent behaviors.
 
 ### Blockers
 - None.
 
 ### Roadmap Evolution
-- Phase 3 broken down into 3 executable plans: Core Behavior Framework, Agent Behavior Definitions, and Simulation Loop Integration.
+- Phase 4 broken down into 2 executable plans: Agent Behavioral Lifecycle Logic and End-to-End Simulation Loop Integration.
 
 ## Session Continuity
-- **Last Action**: Phase 03 planning completed. ROADMAP.md and STATE.md updated.
-- **Next Step**: Execute Phase 03: Agentic Workforce & Logistics (`/gsd:execute-phase 03`).
+- **Last Action**: Phase 04 research and planning completed. ROADMAP.md and STATE.md updated.
+- **Next Step**: Execute Phase 04: Cycle Integration (`/gsd:execute-phase 04`).
