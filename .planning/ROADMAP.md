@@ -2,11 +2,12 @@
 
 ## Phases
 - [x] **Phase 1: Foundation & Baseline** - Integrated simulation environment and core engine.
-- [ ] **Phase 2: Operational Assets** - Models for facilities, equipment, and menus.
-- [ ] **Phase 3: Agentic Workforce & Logistics** - Customer and staff behavior logic.
+- [x] **Phase 2: Operational Assets** - Models for facilities, equipment, and menus.
+- [x] **Phase 3: Agentic Workforce & Logistics** - Customer and staff behavior logic.
 - [ ] **Phase 4: Cycle Integration** - End-to-end fulfillment loop execution.
 - [ ] **Phase 5: Throughput Optimization** - Metrics, analysis, and fulfillment tuning.
 - [ ] **Phase 6: Custom Engine Research** - Strategy for domain-specific simulation logic.
+- [ ] **Phase 7: Data & Metrics Foundation** - Logging, event tracking, and SQLite integration.
 
 ## Phase Details
 
@@ -30,7 +31,7 @@
   1. Facilities have capacity-constrained layouts.
   2. Machines accurately model resource consumption and fault probabilities.
 **Plans**:
-- [ ] 02-PLAN.md — Operational Assets
+- [x] 02-PLAN.md — Operational Assets
 
 ### Phase 3: Agentic Workforce & Logistics
 **Goal**: Implement behavior models for customers and staff.
@@ -39,7 +40,10 @@
 **Success Criteria** (what must be TRUE):
   1. Customers exhibit loyalty/segment-based arrival and queueing patterns.
   2. Staff agents successfully execute fulfillment tasks with efficiency metrics.
-**Plans**: TBD
+**Plans**:
+- [x] 03-01-PLAN.md — Core Behavior Framework (BT + pydantic-ai)
+- [x] 03-02-PLAN.md — Agent Behavior Definitions (Customer + Staff)
+- [x] 03-03-PLAN.md — Simulation Loop Integration
 
 ### Phase 4: Cycle Integration
 **Goal**: Execute the full simulation cycle end-to-end.
@@ -77,7 +81,17 @@
 |-------|----------------|--------|-----------|
 | 1. Foundation & Baseline | 1/1 | Completed | 2026-04-04 |
 | 2. Operational Assets | 1/1 | Completed | 2026-04-04 |
-| 3. Agentic Workforce & Logistics | 0/3 | Not started | - |
+| 3. Agentic Workforce & Logistics | 3/3 | Completed | 2026-04-04 |
 | 4. Cycle Integration | 0/2 | Not started | - |
 | 5. Throughput Optimization | 0/3 | Not started | - |
 | 6. Custom Engine Research | 0/2 | Not started | - |
+| 7. Data & Metrics Foundation | 0/0 | Not started | - |
+
+### Phase 7: Data & Metrics Foundation
+**Goal:** Implement extensive logging for events, actions, and feed metrics into SQLite.
+**Requirements**: TBD
+**Depends on:** Phase 6
+**Plans**: 0 plans
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 7 to break down)

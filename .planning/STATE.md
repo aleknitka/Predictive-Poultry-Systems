@@ -8,37 +8,43 @@
 
 ## Current Position
 
-**Phase**: 3
+**Phase**: 4
 **Plan**: TBD
-**Status**: Phase 2 complete. Ready to plan Phase 3: Agentic Workforce & Logistics.
+**Status**: Phase 3 complete. Ready to plan Phase 4: Cycle Integration.
 
 ```mermaid
 pie title Project Progress
-    "Completed" : 33
+    "Completed" : 67
     "In Progress" : 0
-    "Remaining" : 67
+    "Remaining" : 33
 ```
 
 ## Performance Metrics
-- **Phase Completion**: 33% (2/6 complete)
+- **Phase Completion**: 67% (4/6 complete)
 - **Requirement Coverage**: 100% (Mapped to Phases)
 
 ## Accumulated Context
 
 ### Decisions
-- High-fidelity assets modeled using Pydantic in `src/predictive_poultry_systems/objects/`.
-- Processes (Thermodynamic and Assembly) defined to bridge machines, ingredients, and staff.
-- Staff fatigue and skill levels modeled for labor simulation.
-- Facility capacity constraints implemented.
+- [D-01] Custom Minimal BT implementation.
+- [D-02] Decoupled Logic and Time.
+- [D-03] Hybrid LLM/Rules approach.
+- [D-04] LLM for Menu, Satisfaction, Morale, and Interaction Quality.
+- [D-05] pydantic-ai as the LLM interface (v1.77.0).
+- [D-06] Provider-agnostic inference support using OpenAIChatModel and OpenAIProvider.
+- [D-07] BT integrated with Pydantic models.
 
 ### Todos
-- [ ] Create Phase 3 plan.
-- [ ] Implement Customer behavior models (loyalty, segmentation, RFM).
-- [ ] Implement Staff fulfillment logic (salabim Component processes).
+- [ ] Create Phase 4 plan.
+- [ ] Implement end-to-end fulfillment loop (arrival -> ordering -> cooking -> delivery).
+- [ ] Integrate facility resources (queues, machines) with agent behaviors.
 
 ### Blockers
 - None.
 
+### Roadmap Evolution
+- Phase 3 broken down into 3 executable plans: Core Behavior Framework, Agent Behavior Definitions, and Simulation Loop Integration.
+
 ## Session Continuity
-- **Last Action**: Updated PR #1 with build/test import fixes — Phase 2 ready for merge.
-- **Next Step**: Merge PR #1 and start Planning of Phase 3.
+- **Last Action**: Phase 03 planning completed. ROADMAP.md and STATE.md updated.
+- **Next Step**: Execute Phase 03: Agentic Workforce & Logistics (`/gsd:execute-phase 03`).

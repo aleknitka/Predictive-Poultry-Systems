@@ -8,8 +8,10 @@ dependencies = [
     "Pillow>=10.0.0",
     "faker>=40.12.0",
     "greenlet>=3.3.2",
+    "logfire>=4.31.0",
     "prek>=0.3.8",
     "pydantic>=2.12.5",
+    "pydantic-ai>=1.77.0",
     "ruff>=0.15.9",
     "salabim>=24.0.12",
 ]
