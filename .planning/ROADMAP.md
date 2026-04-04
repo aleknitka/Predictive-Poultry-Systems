@@ -3,7 +3,7 @@
 ## Phases
 - [x] **Phase 1: Foundation & Baseline** - Integrated simulation environment and core engine.
 - [x] **Phase 2: Operational Assets** - Models for facilities, equipment, and menus.
-- [ ] **Phase 3: Agentic Workforce & Logistics** - Customer and staff behavior logic.
+- [x] **Phase 3: Agentic Workforce & Logistics** - Customer and staff behavior logic.
 - [ ] **Phase 4: Cycle Integration** - End-to-end fulfillment loop execution.
 - [ ] **Phase 5: Throughput Optimization** - Metrics, analysis, and fulfillment tuning.
 - [ ] **Phase 6: Custom Engine Research** - Strategy for domain-specific simulation logic.
@@ -41,9 +41,9 @@
   1. Customers exhibit loyalty/segment-based arrival and queueing patterns.
   2. Staff agents successfully execute fulfillment tasks with efficiency metrics.
 **Plans**:
-- [ ] 03-01-PLAN.md — Core Behavior Framework (BT + pydantic-ai)
-- [ ] 03-02-PLAN.md — Agent Behavior Definitions (Customer + Staff)
-- [ ] 03-03-PLAN.md — Simulation Loop Integration
+- [x] 03-01-PLAN.md — Core Behavior Framework (BT + pydantic-ai)
+- [x] 03-02-PLAN.md — Agent Behavior Definitions (Customer + Staff)
+- [x] 03-03-PLAN.md — Simulation Loop Integration
 
 ### Phase 4: Cycle Integration
 **Goal**: Execute the full simulation cycle end-to-end.
@@ -81,7 +81,7 @@
 |-------|----------------|--------|-----------|
 | 1. Foundation & Baseline | 1/1 | Completed | 2026-04-04 |
 | 2. Operational Assets | 1/1 | Completed | 2026-04-04 |
-| 3. Agentic Workforce & Logistics | 0/3 | Not started | - |
+| 3. Agentic Workforce & Logistics | 3/3 | Completed | 2026-04-04 |
 | 4. Cycle Integration | 0/2 | Not started | - |
 | 5. Throughput Optimization | 0/3 | Not started | - |
 | 6. Custom Engine Research | 0/2 | Not started | - |
