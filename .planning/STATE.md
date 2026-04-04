@@ -39,6 +39,9 @@ pie title Project Progress
 ### Blockers
 - None.
 
+### Roadmap Evolution
+- Phase 7 added: add extensive logging for events, actions etc, feed metrics into a database sqlite for later analysis of simulation.
+
 ## Session Continuity
-- **Last Action**: Phase 03 context gathered and decisions captured in `.planning/phases/03-agentic-workforce-logistics/03-CONTEXT.md`.
-- **Next Step**: Start Planning for Phase 03 (`/gsd:plan-phase 03`).
+- **Last Action**: Phase 07 context gathered and decisions captured in `.planning/phases/07-data-metrics-foundation/07-CONTEXT.md`.
+- **Next Step**: Start Planning for Phase 03 (`/gsd:plan-phase 03`) or Phase 07 (`/gsd:plan-phase 07`).
