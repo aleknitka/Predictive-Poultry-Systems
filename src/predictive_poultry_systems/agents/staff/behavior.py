@@ -1,8 +1,10 @@
+import salabim as sim
 from typing import Any
 from pydantic import BaseModel
 from ..behavior.bt.base import Status, Node
 from ..behavior.bt.leaves import ActionNode
 from ..behavior.bt.composites import Sequence
+from .base import BaseStaff
 
 # --- STAFF LEAF NODES ---
 
@@ -55,3 +57,50 @@ def get_default_staff_tree() -> Node:
             MoraleNode(name="check_morale"),
         ],
     )
+
+
+# --- SALABIM COMPONENTS ---
+
+
+class ProteinUnit(sim.Component):
+    """A data component representing a piece of poultry."""
+
+    pass
+
+
+class Staff(sim.Component):
+    """
+    Active staff component driving fulfillment tasks.
+    """
+
+    def setup(self, agent_data: BaseStaff):
+        self.agent_data = agent_data
+
+    def process(self):
+        while True:
+            # 1. Idle / Wait for Work
+            if not self.env.orders:
+                yield self.wait(self.env.order_available_signal)
+
+            if not self.env.orders:
+                continue
+
+            # Pick an order (FIFO for now)
+            self.env.orders.pop(0)
+            if not self.env.orders:
+                self.env.order_available_signal.set(False)
+
+            # 2. Production (Cooking)
+            yield self.request(self.env.fryers)
+            skill_mod = self.agent_data.skill_level
+            # Simulate a ThermodynamicProcess (duration_mean ~ 4)
+            yield self.hold(sim.Uniform(3, 5).sample() / skill_mod)
+            self.release()
+
+            # 3. Fulfillment (Putting in cabinet)
+            # Item is ready
+            item = ProteinUnit(name=f"ProteinUnit.{self.env.now()}")
+            yield self.to_store(self.env.holding_cabinet, item)
+
+            # 4. Cleanup/Cycle reset
+            yield self.hold(0.5)

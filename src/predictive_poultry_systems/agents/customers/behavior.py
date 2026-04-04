@@ -1,8 +1,10 @@
+import salabim as sim
 from typing import Any
 from pydantic import BaseModel
 from ..behavior.bt.base import Status, Node
 from ..behavior.bt.leaves import ActionNode
 from ..behavior.bt.composites import Sequence
+from .base import BaseCustomer
 
 # --- CUSTOMER LEAF NODES ---
 
@@ -63,3 +65,38 @@ def get_default_customer_tree() -> Node:
             OrderDecisionNode(name="choose_menu"),
         ],
     )
+
+
+# --- SALABIM COMPONENTS ---
+
+
+class Customer(sim.Component):
+    """
+    Active customer component driving its own fulfillment lifecycle.
+    """
+
+    def setup(self, agent_data: BaseCustomer):
+        self.agent_data = agent_data
+
+    def process(self):
+        # 1. Arrival
+        yield self.hold(sim.Exponential(1).sample())
+
+        # 2. Ordering
+        yield self.request(self.env.kiosks)
+        yield self.hold(sim.Uniform(1, 3).sample())
+        self.release()
+
+        # Notify staff that an order is placed
+        self.env.orders.append(self)
+        self.env.order_available_signal.set(True)
+
+        # 3. Waiting for Food (from Holding Cabinet)
+        # In this simplified model, customers pull from the cabinet
+        yield self.from_store(self.env.holding_cabinet)
+
+        # 4. Consumption
+        yield self.hold(sim.Uniform(5, 15).sample())
+
+        # 5. Exit
+        pass
