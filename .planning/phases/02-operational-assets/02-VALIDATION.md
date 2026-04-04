@@ -16,6 +16,9 @@
   - `test_staff_creation`: PASSED
   - `test_processes_creation`: PASSED
   - `test_facility_creation`: PASSED
+- `tests/test_agents.py`:
+  - `test_rfm_profile_creation`: PASSED
+  - `test_rfm_profile_validation`: PASSED
 
 ## Manual Verification
 - Verified that `uv run ruff check .` and `uv run ruff format --check .` return success.
