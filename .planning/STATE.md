@@ -9,14 +9,14 @@
 ## Current Position
 
 **Phase**: 3
-**Plan**: TBD
-**Status**: Phase 2 complete. Ready to plan Phase 3: Agentic Workforce & Logistics.
+**Plan**: 03-01
+**Status**: Phase 3 planned (3 plans). Ready to execute 03-01: Core Behavior Framework.
 
 ```mermaid
 pie title Project Progress
     "Completed" : 33
-    "In Progress" : 0
-    "Remaining" : 67
+    "In Progress" : 10
+    "Remaining" : 57
 ```
 
 ## Performance Metrics
@@ -26,13 +26,16 @@ pie title Project Progress
 ## Accumulated Context
 
 ### Decisions
-- High-fidelity assets modeled using Pydantic in `src/predictive_poultry_systems/objects/`.
-- Processes (Thermodynamic and Assembly) defined to bridge machines, ingredients, and staff.
-- Staff fatigue and skill levels modeled for labor simulation.
-- Facility capacity constraints implemented.
+- [D-01] Custom Minimal BT implementation.
+- [D-02] Decoupled Logic and Time.
+- [D-03] Hybrid LLM/Rules approach.
+- [D-04] LLM for Menu, Satisfaction, Morale, and Interaction Quality.
+- [D-05] pydantic-ai as the LLM interface.
+- [D-06] Provider-agnostic inference support.
+- [D-07] BT integrated with Pydantic models.
 
 ### Todos
-- [ ] Create Phase 3 plan.
+- [ ] Execute Phase 3 plans (03-01, 03-02, 03-03).
 - [ ] Implement Customer behavior models (loyalty, segmentation, RFM).
 - [ ] Implement Staff fulfillment logic (salabim Component processes).
 
@@ -40,8 +43,8 @@ pie title Project Progress
 - None.
 
 ### Roadmap Evolution
-- Phase 7 added: add extensive logging for events, actions etc, feed metrics into a database sqlite for later analysis of simulation.
+- Phase 3 broken down into 3 executable plans: Core Behavior Framework, Agent Behavior Definitions, and Simulation Loop Integration.
 
 ## Session Continuity
-- **Last Action**: Phase 07 context gathered and decisions captured in `.planning/phases/07-data-metrics-foundation/07-CONTEXT.md`.
-- **Next Step**: Start Planning for Phase 03 (`/gsd:plan-phase 03`) or Phase 07 (`/gsd:plan-phase 07`).
+- **Last Action**: Phase 03 planning completed. ROADMAP.md and STATE.md updated.
+- **Next Step**: Execute Phase 03: Agentic Workforce & Logistics (`/gsd:execute-phase 03`).
