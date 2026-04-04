@@ -1,8 +1,6 @@
 import salabim as sim
-from predictive_poultry_systems.agents.simulation import (
-    CustomerComponent,
-    StaffComponent,
-)
+from predictive_poultry_systems.agents.customers.behavior import Customer
+from predictive_poultry_systems.agents.staff.behavior import Staff
 from predictive_poultry_systems.agents.customers.base import BaseCustomer
 from predictive_poultry_systems.agents.staff.base import BaseStaff, StaffRoles
 from predictive_poultry_systems.agents.customers.loyalty import (
@@ -43,12 +41,10 @@ class AgentGenerator(sim.Component):
             )
 
             # Spawn the customer component in the simulation
-            CustomerComponent(
-                name=f"Customer.{self.env.now()}", agent_data=customer_data
-            )
+            Customer(name=f"Customer.{self.env.now()}", agent_data=customer_data)
 
             # Wait for next arrival (simulated fixed rate for now)
-            yield self.hold(sim.Uniform(5, 15).sample())
+            yield self.hold(sim.Exponential(10).sample())
 
 
 def run_simulation(till: int = 100):
@@ -57,17 +53,29 @@ def run_simulation(till: int = 100):
     """
     env = sim.Environment(trace=True, yieldless=False)
 
+    # Initialize Physical Resources
+    env.kiosks = sim.Resource("Kiosks", capacity=2)
+    env.fryers = sim.Resource("Fryers", capacity=3)
+
+    # Initialize Operational Stores
+    env.holding_cabinet = sim.Store("HoldingCabinet", capacity=20)
+
+    # Initialize Signals
+    env.order_available_signal = sim.State("OrderAvailable", value=False)
+    env.orders = []  # Shared list for simplicity in this phase
+
     # Initialize Staff
-    staff_data = BaseStaff(
-        name="Staff_1",
-        role=StaffRoles.FRY_COOK,
-        hourly_wage=15.0,
-        skill_level=1.0,
-        fatigue_rate=0.01,
-        shift_hours=8.0,
-        root_node=get_default_staff_tree(),
-    )
-    StaffComponent(name="Staff.1", agent_data=staff_data)
+    for i in range(2):
+        staff_data = BaseStaff(
+            name=f"Staff_{i}",
+            role=StaffRoles.FRY_COOK,
+            hourly_wage=15.0,
+            skill_level=1.0,
+            fatigue_rate=0.01,
+            shift_hours=8.0,
+            root_node=get_default_staff_tree(),
+        )
+        Staff(name=f"Staff.{i}", agent_data=staff_data)
 
     # Initialize Customer Generator
     AgentGenerator()
@@ -77,7 +85,7 @@ def run_simulation(till: int = 100):
 
 
 def main():
-    run_simulation(till=50)
+    run_simulation(till=100)
 
 
 if __name__ == "__main__":
