@@ -5,7 +5,7 @@
 - [x] **Phase 2: Operational Assets** - Models for facilities, equipment, and menus.
 - [x] **Phase 3: Agentic Workforce & Logistics** - Customer and staff behavior logic.
 - [x] **Phase 4: Cycle Integration** - End-to-end fulfillment loop execution.
-- [ ] **Phase 5: Throughput Optimization** - Metrics, analysis, and fulfillment tuning.
+- [x] **Phase 5: Throughput Optimization** - Metrics, analysis, and fulfillment tuning.
 - [ ] **Phase 6: Custom Engine Research** - Strategy for domain-specific simulation logic.
 - [ ] **Phase 7: Data & Metrics Foundation** - Logging, event tracking, and SQLite integration.
 
@@ -62,12 +62,13 @@
 **Requirements**: [MET-01, MET-02, MET-03]
 **Success Criteria** (what must be TRUE):
   1. The system outputs throughput and fiscal yield reports.
-  2. Customer satisfaction ("stakeholder friction") is quantified and tracked.
+  2. Customer satisfaction (CSI) and Staff Morale (SMI) are quantified and tracked.
   3. "Crisp-state" metrics identify the thermodynamic optimum for cooking.
-**Plans:**
-- [ ] 05-01-PLAN.md — Metrics Foundations (TDD)
-- [ ] 05-02-PLAN.md — Fulfillment Manager & Monitoring
-- [ ] 05-03-PLAN.md — Analytics Reporting & System Validation
+  4. Salabim monitors are integrated into FulfillmentManager.
+**Plans**:
+- [x] 05-01-PLAN.md — Metrics Foundations
+- [x] 05-02-PLAN.md — Fulfillment Manager & Monitoring
+- [x] 05-03-PLAN.md — Analytics Reporting & System Validation
 **UI hint**: yes
 
 ### Phase 6: Custom Engine Research
@@ -77,7 +78,9 @@
 **Success Criteria** (what must be TRUE):
   1. A detailed requirements document for the custom engine is finalized.
   2. Technical design for the custom thermodynamic logic is approved.
-**Plans**: TBD
+**Plans**:
+- [ ] 06-01-PLAN.md — Custom Engine Requirements Specification
+- [ ] 06-02-PLAN.md — Thermodynamic & Physics Design Specification
 
 ## Progress Table
 
@@ -87,7 +90,7 @@
 | 2. Operational Assets | 1/1 | Completed | 2026-04-04 |
 | 3. Agentic Workforce & Logistics | 3/3 | Completed | 2026-04-04 |
 | 4. Cycle Integration | 2/2 | Completed | 2026-04-04 |
-| 5. Throughput Optimization | 0/3 | In Progress | - |
+| 5. Throughput Optimization | 3/3 | Completed | 2026-04-04 |
 | 6. Custom Engine Research | 0/2 | Not started | - |
 | 7. Data & Metrics Foundation | 0/0 | Not started | - |
 
