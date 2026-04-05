@@ -6,26 +6,8 @@ from predictive_poultry_systems.agents.factories import (
     create_customer_data,
     create_staff_data,
 )
-
-
-class FulfillmentManager(sim.Component):
-    """Encapsulates order tracking and signaling."""
-
-    def setup(self):
-        self.orders = []
-        self.order_available_signal = sim.State("OrderAvailable", value=False)
-
-    def add_order(self, customer: sim.Component):
-        self.orders.append(customer)
-        self.order_available_signal.set(True)
-
-    def pop_order(self) -> sim.Component:
-        if not self.orders:
-            return None
-        order = self.orders.pop(0)
-        if not self.orders:
-            self.order_available_signal.set(False)
-        return order
+from predictive_poultry_systems.agents.simulation import FulfillmentManager
+from predictive_poultry_systems.analytics.reporter import generate_fulfillment_audit
 
 
 class AgentGenerator(sim.Component):
@@ -68,11 +50,15 @@ def run_simulation(till: int = 100):
     AgentGenerator()
 
     env.run(till=till)
+
+    # Generate Performance Audit
+    generate_fulfillment_audit(env)
+
     return env
 
 
 def main():
-    run_simulation(till=100)
+    run_simulation(till=200)
 
 
 if __name__ == "__main__":

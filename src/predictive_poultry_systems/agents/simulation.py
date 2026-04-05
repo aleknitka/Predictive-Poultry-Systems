@@ -1,8 +1,63 @@
 import salabim as sim
-from typing import Union
+from typing import Union, List, Any
 from .customers.base import BaseCustomer
 from .staff.base import BaseStaff
 from .behavior.bt.base import Status
+
+
+class FulfillmentManager(sim.Component):
+    """
+    Centralized orchestrator for order tracking and performance monitoring.
+    """
+
+    def setup(self):
+        self.orders: List[Any] = []
+        self.order_available_signal = sim.State("OrderAvailable", value=False)
+
+        # Performance Monitors
+        self.revenue_monitor = sim.Monitor("Revenue", level=True)
+        self.sos_monitor = sim.Monitor("Speed of Service")
+        self.satisfaction_monitor = sim.Monitor("Customer Satisfaction", level=True)
+        self.morale_monitor = sim.Monitor("Staff Morale", level=True)
+        self.crispness_monitor = sim.Monitor("Crisp-state Compliance")
+
+        # Initialize level monitors
+        self.revenue_monitor.tally(0)
+        self.satisfaction_monitor.tally(10.0)  # Start at max
+        self.morale_monitor.tally(10.0)  # Start at max
+
+    def add_order(self, customer: sim.Component):
+        self.orders.append(customer)
+        self.order_available_signal.set(True)
+
+    def pop_order(self) -> Any:
+        if not self.orders:
+            return None
+        order = self.orders.pop(0)
+        if not self.orders:
+            self.order_available_signal.set(False)
+        return order
+
+    def tally_revenue(self, amount: float):
+        """Increments the total revenue."""
+        current = self.revenue_monitor.get()
+        self.revenue_monitor.tally(current + amount)
+
+    def record_sos(self, duration: float):
+        """Records a completed speed of service (SoS)."""
+        self.sos_monitor.tally(duration)
+
+    def update_satisfaction(self, value: float):
+        """Updates the current aggregate customer satisfaction."""
+        self.satisfaction_monitor.tally(value)
+
+    def update_morale(self, value: float):
+        """Updates the current aggregate staff morale."""
+        self.morale_monitor.tally(value)
+
+    def tally_crispness(self, value: float):
+        """Records the crispness score of a finished product."""
+        self.crispness_monitor.tally(value)
 
 
 class BehavioralComponent(sim.Component):
