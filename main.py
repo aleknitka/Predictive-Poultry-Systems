@@ -1,21 +1,31 @@
 import salabim as sim
 from predictive_poultry_systems.agents.customers.behavior import Customer
 from predictive_poultry_systems.agents.staff.behavior import Staff
-from predictive_poultry_systems.agents.customers.base import BaseCustomer
-from predictive_poultry_systems.agents.staff.base import BaseStaff, StaffRoles
-from predictive_poultry_systems.agents.customers.loyalty import (
-    CustomerLoyalty,
-    CustomerLoyaltyLevel,
+from predictive_poultry_systems.agents.staff.base import StaffRoles
+from predictive_poultry_systems.agents.factories import (
+    create_customer_data,
+    create_staff_data,
 )
-from predictive_poultry_systems.agents.customers.segments import (
-    CustomerSegment,
-    CustomerSegmentTypes,
-)
-from predictive_poultry_systems.agents.customers.rfm import CustomerRFMProfile
-from predictive_poultry_systems.agents.customers.behavior import (
-    get_default_customer_tree,
-)
-from predictive_poultry_systems.agents.staff.behavior import get_default_staff_tree
+
+
+class FulfillmentManager(sim.Component):
+    """Encapsulates order tracking and signaling."""
+
+    def setup(self):
+        self.orders = []
+        self.order_available_signal = sim.State("OrderAvailable", value=False)
+
+    def add_order(self, customer: sim.Component):
+        self.orders.append(customer)
+        self.order_available_signal.set(True)
+
+    def pop_order(self) -> sim.Component:
+        if not self.orders:
+            return None
+        order = self.orders.pop(0)
+        if not self.orders:
+            self.order_available_signal.set(False)
+        return order
 
 
 class AgentGenerator(sim.Component):
@@ -23,22 +33,8 @@ class AgentGenerator(sim.Component):
 
     def process(self):
         while True:
-            # Create a mock customer
-            customer_data = BaseCustomer(
-                segment=CustomerSegment(
-                    name=CustomerSegmentTypes.MILENNIALS,
-                    profile="Generic profile",
-                    preferences="Generic preferences",
-                ),
-                satisfaction=5.0,
-                price_sensitivity=0.5,
-                promo_sensitivity=0.5,
-                loyalty=CustomerLoyalty(
-                    level=CustomerLoyaltyLevel.LOYAL,
-                    rfm=CustomerRFMProfile(recency=3, frequency=3, monetary=3),
-                ),
-                root_node=get_default_customer_tree(),
-            )
+            # Create a mock customer using factory
+            customer_data = create_customer_data()
 
             # Spawn the customer component in the simulation
             Customer(name=f"Customer.{self.env.now()}", agent_data=customer_data)
@@ -60,21 +56,12 @@ def run_simulation(till: int = 100):
     # Initialize Operational Stores
     env.holding_cabinet = sim.Store("HoldingCabinet", capacity=20)
 
-    # Initialize Signals
-    env.order_available_signal = sim.State("OrderAvailable", value=False)
-    env.orders = []  # Shared list for simplicity in this phase
+    # Initialize Managers
+    env.fulfillment_manager = FulfillmentManager()
 
-    # Initialize Staff
+    # Initialize Staff using factory
     for i in range(2):
-        staff_data = BaseStaff(
-            name=f"Staff_{i}",
-            role=StaffRoles.FRY_COOK,
-            hourly_wage=15.0,
-            skill_level=1.0,
-            fatigue_rate=0.01,
-            shift_hours=8.0,
-            root_node=get_default_staff_tree(),
-        )
+        staff_data = create_staff_data(name=f"Staff_{i}", role=StaffRoles.FRY_COOK)
         Staff(name=f"Staff.{i}", agent_data=staff_data)
 
     # Initialize Customer Generator

@@ -79,20 +79,17 @@ class Staff(sim.Component):
     def process(self):
         while True:
             # 1. Idle / Wait for Work
-            if not self.env.orders:
-                yield self.wait(self.env.order_available_signal)
-
-            if not self.env.orders:
-                continue
+            if not self.env.fulfillment_manager.orders:
+                yield self.wait(self.env.fulfillment_manager.order_available_signal)
 
             # Pick an order (FIFO for now)
-            self.env.orders.pop(0)
-            if not self.env.orders:
-                self.env.order_available_signal.set(False)
+            order = self.env.fulfillment_manager.pop_order()
+            if not order:
+                continue
 
             # 2. Production (Cooking)
             yield self.request(self.env.fryers)
-            skill_mod = self.agent_data.skill_level
+            skill_mod = max(self.agent_data.skill_level, 0.1)
             # Simulate a ThermodynamicProcess (duration_mean ~ 4)
             yield self.hold(sim.Uniform(3, 5).sample() / skill_mod)
             self.release()

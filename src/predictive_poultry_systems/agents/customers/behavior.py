@@ -88,8 +88,7 @@ class Customer(sim.Component):
         self.release()
 
         # Notify staff that an order is placed
-        self.env.orders.append(self)
-        self.env.order_available_signal.set(True)
+        self.env.fulfillment_manager.add_order(self)
 
         # 3. Waiting for Food (from Holding Cabinet)
         # In this simplified model, customers pull from the cabinet

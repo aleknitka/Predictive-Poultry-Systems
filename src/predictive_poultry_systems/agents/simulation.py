@@ -43,11 +43,6 @@ class BehavioralComponent(sim.Component):
                 # Decision failed, maybe wait longer before retrying or idling
                 yield self.hold(1.0)
 
-            # Safety hold to prevent infinite loops if status logic is broken
-            # (though SUCCESS/FAILURE already hold)
-            if status not in [Status.RUNNING, Status.SUCCESS, Status.FAILURE]:
-                yield self.hold(1.0)
-
 
 class CustomerComponent(BehavioralComponent):
     """Specialized component for customers."""
