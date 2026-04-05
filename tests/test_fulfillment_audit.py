@@ -6,7 +6,7 @@ def test_audit_generation_no_error():
     """
     Smoke test to ensure the reporter runs without error at the end of a simulation.
     """
-    env = run_simulation(till=50)
+    env = run_simulation(till=50, seed=42)
     # The reporter prints to stdout, we just want to ensure it doesn't crash
     generate_fulfillment_audit(env)
 

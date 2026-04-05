@@ -36,25 +36,25 @@ def run_simulation(till: int = 100, seed: int = 42):
     """
     # Initialize Database and Run Metadata
     db = DatabaseManager(DEFAULT_DB_PATH)
-    run_id = db.create_run(seed=seed)
-
-    # Initialize Salabim Environment
-    env = sim.Environment(trace=False, yieldless=False, random_seed=seed)
-    setup_simulation_logger(env)
-
-    # Add a loguru sink to persist all simulation logs to SQLite
-    def db_log_sink(message):
-        record = message.record
-        db.log_event(
-            run_id=run_id,
-            sim_time=record["extra"].get("sim_time", env.now()),
-            level=record["level"].name,
-            message=record["message"],
-        )
-
-    db_sink_id = logger.add(db_log_sink, level="INFO")
-
     try:
+        run_id = db.create_run(seed=seed)
+
+        # Initialize Salabim Environment
+        env = sim.Environment(trace=False, yieldless=False, random_seed=seed)
+        setup_simulation_logger(env)
+
+        # Add a loguru sink to persist all simulation logs to SQLite
+        def db_log_sink(message):
+            record = message.record
+            db.log_event(
+                run_id=run_id,
+                sim_time=record["extra"].get("sim_time", env.now()),
+                level=record["level"].name,
+                message=record["message"],
+            )
+
+        db_sink_id = logger.add(db_log_sink, level="INFO")
+
         # Initialize Physical Resources
         env.kiosks = sim.Resource("Kiosks", capacity=2)
         env.fryers = sim.Resource("Fryers", capacity=3)

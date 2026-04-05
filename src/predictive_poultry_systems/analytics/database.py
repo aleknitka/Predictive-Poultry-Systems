@@ -69,6 +69,17 @@ class DatabaseManager:
                     FOREIGN KEY(run_id) REFERENCES runs(run_id)
                 );
             """)
+
+            # Performance Indexes
+            self.conn.execute(
+                "CREATE INDEX IF NOT EXISTS idx_sim_logs_run ON simulation_logs(run_id)"
+            )
+            self.conn.execute(
+                "CREATE INDEX IF NOT EXISTS idx_resource_run ON resource_metrics(run_id)"
+            )
+            self.conn.execute(
+                "CREATE INDEX IF NOT EXISTS idx_kpi_run ON kpi_metrics(run_id)"
+            )
         logger.info(f"Database schema initialized at {self.db_path}")
 
     def create_run(
@@ -83,7 +94,7 @@ class DatabaseManager:
         Returns:
             The unique run_id for this simulation.
         """
-        config_json = json.dumps(config) if config else None
+        config_json = json.dumps(config, default=str) if config else None
         with self.conn:
             cursor = self.conn.execute(
                 "INSERT INTO runs (seed, config_json) VALUES (?, ?)",

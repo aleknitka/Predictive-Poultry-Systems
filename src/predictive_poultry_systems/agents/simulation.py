@@ -1,5 +1,6 @@
 import salabim as sim
-from typing import Union, List, Any, Dict
+from collections import deque
+from typing import Union, Any, Dict
 from .customers.base import BaseCustomer
 from .staff.base import BaseStaff
 from .behavior.bt.base import Status
@@ -11,7 +12,7 @@ class FulfillmentManager(sim.Component):
     """
 
     def setup(self):
-        self.orders: List[Any] = []
+        self.orders: deque = deque()
         self.order_available_signal = sim.State("OrderAvailable", value=False)
 
         # Performance Monitors
@@ -39,7 +40,7 @@ class FulfillmentManager(sim.Component):
     def pop_order(self) -> Any:
         if not self.orders:
             return None
-        order = self.orders.pop(0)
+        order = self.orders.popleft()
         if not self.orders:
             self.order_available_signal.set(False)
         return order

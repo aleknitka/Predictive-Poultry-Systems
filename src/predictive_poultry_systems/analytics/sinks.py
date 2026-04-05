@@ -1,4 +1,5 @@
 import salabim as sim
+import math
 from typing import TYPE_CHECKING
 from loguru import logger
 
@@ -78,17 +79,15 @@ class MetricSink(sim.Component):
         for monitor_attr, kpi_name in kpi_map.items():
             monitor = getattr(fm, monitor_attr, None)
             if monitor is not None:
-                # salabim monitors use _level internally to indicate level monitors
-                is_level = getattr(monitor, "_level", False)
-                if is_level:
+                # Use duck typing: level monitors support .get(), others support .mean()
+                try:
                     value = monitor.get()
-                else:
+                except (AttributeError, TypeError):
                     value = monitor.mean()
 
                 # Handle cases where no data has been collected yet (NaN)
-                if value != value:  # NaN check
+                if math.isnan(value):
                     value = 0.0
-
                 self.db.log_kpi(
                     run_id=self.run_id,
                     sim_time=self.env.now(),

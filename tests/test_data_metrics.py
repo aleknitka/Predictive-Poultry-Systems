@@ -7,12 +7,20 @@ from predictive_poultry_systems.config import DEFAULT_DB_PATH
 
 @pytest.fixture
 def clean_db():
-    """Ensure we start with a clean database and clean up after."""
-    if os.path.exists(DEFAULT_DB_PATH):
-        os.remove(DEFAULT_DB_PATH)
+    """Ensure we start with a clean database and cleanup afterwards."""
+
+    def _cleanup():
+        for path in [
+            DEFAULT_DB_PATH,
+            DEFAULT_DB_PATH + "-wal",
+            DEFAULT_DB_PATH + "-shm",
+        ]:
+            if os.path.exists(path):
+                os.remove(path)
+
+    _cleanup()
     yield
-    if os.path.exists(DEFAULT_DB_PATH):
-        os.remove(DEFAULT_DB_PATH)
+    _cleanup()
 
 
 def test_persistence_end_to_end(clean_db):
@@ -84,3 +92,114 @@ def test_multiple_runs(clean_db):
     assert count == 2
 
     conn.close()
+
+
+def test_reporter_no_manager():
+    """Verifies reporter handles missing FulfillmentManager gracefully."""
+    import salabim as sim
+    from predictive_poultry_systems.analytics.reporter import generate_fulfillment_audit
+
+    env = sim.Environment()
+    # No fulfillment_manager set
+    generate_fulfillment_audit(env)
+
+
+def test_reporter_bad_monitors():
+    """Verifies reporter handles monitors raising TypeError gracefully."""
+    import salabim as sim
+    from predictive_poultry_systems.analytics.reporter import generate_fulfillment_audit
+
+    class TypeErrorMonitor:
+        def get(self):
+            raise TypeError("Mock error")
+
+        def mean(self):
+            raise TypeError("Mock error")
+
+        def std(self):
+            raise TypeError("Mock error")
+
+        def number_of_entries(self):
+            return 1
+
+        def print_histogram(self):
+            pass
+
+    class AttributeErrorMonitor:
+        def get(self):
+            raise AttributeError("Mock error")
+
+        def mean(self):
+            raise AttributeError("Mock error")
+
+        def std(self):
+            raise AttributeError("Mock error")
+
+        def number_of_entries(self):
+            return 1
+
+        def print_histogram(self):
+            pass
+
+    class MockFM:
+        def __init__(self):
+            self.satisfaction_monitor = TypeErrorMonitor()
+            self.morale_monitor = AttributeErrorMonitor()
+            self.revenue_monitor = TypeErrorMonitor()
+            self.sos_monitor = AttributeErrorMonitor()
+            self.crispness_monitor = TypeErrorMonitor()
+
+    env = sim.Environment()
+    env.fulfillment_manager = MockFM()
+    generate_fulfillment_audit(env)
+
+
+def test_sink_error_handling(clean_db):
+    """Verifies MetricSink handles sampling errors gracefully."""
+    import salabim as sim
+    from predictive_poultry_systems.analytics.database import DatabaseManager
+    from predictive_poultry_systems.analytics.sinks import MetricSink
+
+    db = DatabaseManager(DEFAULT_DB_PATH)
+    try:
+        run_id = db.create_run()
+
+        env = sim.Environment(yieldless=False)
+        sink = MetricSink(env=env, db=db, run_id=run_id)
+
+        # Mock a monitor that raises TypeError on get()
+
+        class BadMonitor:
+            def get(self):
+                raise TypeError("Mock error")
+
+            def mean(self):
+                return 0.5
+
+        class MockFM:
+            def __init__(self):
+                self.satisfaction_monitor = BadMonitor()
+                self.morale_monitor = BadMonitor()
+                self.revenue_monitor = BadMonitor()
+                self.sos_monitor = BadMonitor()
+
+        env.fulfillment_manager = MockFM()
+
+        # Manually trigger sampling
+        sink._sample_kpis()
+    finally:
+        db.close()
+
+
+def test_database_manager_close(clean_db):
+    """Verifies that DatabaseManager closes its connection properly."""
+    from predictive_poultry_systems.analytics.database import DatabaseManager
+
+    db = DatabaseManager(DEFAULT_DB_PATH)
+    db.close()
+    # verify it's closed by trying to execute a query
+    import pytest
+    import sqlite3
+
+    with pytest.raises(sqlite3.ProgrammingError):
+        db.conn.execute("SELECT 1")
