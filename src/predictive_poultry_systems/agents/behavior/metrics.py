@@ -1,4 +1,5 @@
 import math
+from predictive_poultry_systems.config import EXPECTED_SOS_MINUTES
 
 
 def calculate_crisp_state(
@@ -21,7 +22,7 @@ def calculate_crisp_state(
 def update_satisfaction(
     wait_time: float,
     base_satisfaction: float = 10.0,
-    expected_sos: float = 180.0,
+    expected_sos: float = EXPECTED_SOS_MINUTES,
     k: float = 0.005,
 ) -> float:
     """

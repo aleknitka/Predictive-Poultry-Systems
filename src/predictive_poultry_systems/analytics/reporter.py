@@ -1,3 +1,6 @@
+from predictive_poultry_systems.config import MINUTES_PER_HOUR
+
+
 def generate_fulfillment_audit(env):
     """
     Aggregates statistics from salabim monitors and prints a human-readable performance report.
@@ -14,7 +17,7 @@ def generate_fulfillment_audit(env):
     # 1. Throughput Calculation
     # Assuming till time is in minutes, throughput = (n_orders / till) * 60 (orders per hour)
     n_orders = manager.sos_monitor.number_of_entries()
-    sim_time_h = env.now() / 60.0
+    sim_time_h = env.now() / MINUTES_PER_HOUR
     throughput = n_orders / sim_time_h if sim_time_h > 0 else 0
 
     print(f"Total Fulfillment Cycles: {n_orders}")
@@ -40,8 +43,13 @@ def generate_fulfillment_audit(env):
 
     # Customer Satisfaction
     print("\nCustomer Satisfaction Index (CSI):")
-    print(f"  Current: {manager.satisfaction_monitor.get():.2f} / 10.0")
-    print(f"  Mean:    {manager.satisfaction_monitor.mean():.2f}")
+    if manager.satisfaction_monitor.number_of_entries() > 0:
+        # .x() returns a list of values, we want the last one
+        last_sat = manager.satisfaction_monitor.x()[-1]
+        print(f"  Last: {last_sat:.2f} / 10.0")
+        print(f"  Mean: {manager.satisfaction_monitor.mean():.2f}")
+    else:
+        print("  No satisfaction data recorded.")
 
     # Staff Morale
     print("\nStaff Morale Index (SMI):")

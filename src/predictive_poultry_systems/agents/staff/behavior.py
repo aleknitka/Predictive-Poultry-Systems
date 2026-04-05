@@ -6,6 +6,7 @@ from ..behavior.bt.leaves import ActionNode
 from ..behavior.bt.composites import Sequence
 from .base import BaseStaff
 from ..behavior.metrics import calculate_morale, calculate_crisp_state
+from predictive_poultry_systems.config import SECONDS_PER_SIM_UNIT
 
 # --- STAFF LEAF NODES ---
 
@@ -85,7 +86,7 @@ class Staff(sim.Component):
             current_morale = calculate_morale(
                 fatigue=self.fatigue, skill_level=self.agent_data.skill_level
             )
-            self.env.fulfillment_manager.update_morale(current_morale)
+            self.env.fulfillment_manager.update_morale(self.name(), current_morale)
 
             # 1. Idle / Wait for Work
             if not self.env.fulfillment_manager.orders:
@@ -106,9 +107,7 @@ class Staff(sim.Component):
             self.release()
 
             # --- CRISPNESS CALCULATION ---
-            # Scale cook_duration to seconds if simulation time is minutes?
-            # Assuming 1.0 sim time = 1 minute = 60s
-            cook_time_s = cook_duration * 60.0
+            cook_time_s = cook_duration * SECONDS_PER_SIM_UNIT
             crispness = calculate_crisp_state(cook_time=cook_time_s)
             self.env.fulfillment_manager.tally_crispness(crispness)
 

@@ -6,6 +6,7 @@ from ..behavior.bt.leaves import ActionNode
 from ..behavior.bt.composites import Sequence
 from .base import BaseCustomer
 from ..behavior.metrics import update_satisfaction
+from predictive_poultry_systems.config import DEFAULT_ORDER_VALUE
 
 # --- CUSTOMER LEAF NODES ---
 
@@ -100,8 +101,9 @@ class Customer(sim.Component):
         sos = self.env.now() - self.arrival_time
         self.env.fulfillment_manager.record_sos(sos)
 
-        # Tally revenue (simulated price of 10.0 per order)
-        self.env.fulfillment_manager.tally_revenue(10.0)
+        # Tally revenue
+        order_val = self.agent_data.memory.get("order_value", DEFAULT_ORDER_VALUE)
+        self.env.fulfillment_manager.tally_revenue(order_val)
 
         # Update aggregate satisfaction
         new_sat = update_satisfaction(

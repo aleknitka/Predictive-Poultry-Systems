@@ -31,3 +31,25 @@ def test_throughput_calculation():
     # but we can verify the data it uses.
     assert env.now() == 10
     assert sim_time_h == 10 / 60.0
+
+
+def test_morale_aggregation():
+    """
+    Verifies that morale is aggregated across multiple staff members.
+    """
+    env = run_simulation(till=0)  # Don't run, just setup
+    manager = env.fulfillment_manager
+
+    # Clear map to be sure (it might have entries from Staff components setup in run_simulation)
+    manager._staff_morale_map = {}
+
+    manager.update_morale("Staff_0", 10.0)
+    assert manager.morale_monitor.get() == 10.0
+
+    manager.update_morale("Staff_1", 5.0)
+    # (10 + 5) / 2 = 7.5
+    assert manager.morale_monitor.get() == 7.5
+
+    manager.update_morale("Staff_0", 8.0)
+    # (8 + 5) / 2 = 6.5
+    assert manager.morale_monitor.get() == 6.5

@@ -20,14 +20,17 @@ def test_calculate_crisp_state():
 
 
 def test_update_satisfaction():
-    # expected_sos = 180, base = 10.0, k = 0.005
+    # Explicitly pass expected_sos to avoid config mismatch in tests
+    expected_sos = 180.0
     # At or below threshold, no decay
-    assert update_satisfaction(180) == 10.0
-    assert update_satisfaction(150) == 10.0
+    assert update_satisfaction(180, expected_sos=expected_sos) == 10.0
+    assert update_satisfaction(150, expected_sos=expected_sos) == 10.0
 
     # After threshold: 300s -> 120s decay -> 10 * exp(-0.005 * 120) = 10 * exp(-0.6) ~ 5.488
     expected = 10.0 * math.exp(-0.005 * 120)
-    assert math.isclose(update_satisfaction(300), expected, rel_tol=1e-5)
+    assert math.isclose(
+        update_satisfaction(300, expected_sos=expected_sos), expected, rel_tol=1e-5
+    )
 
 
 def test_calculate_morale():
