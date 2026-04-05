@@ -64,7 +64,10 @@
   1. The system outputs throughput and fiscal yield reports.
   2. Customer satisfaction ("stakeholder friction") is quantified and tracked.
   3. "Crisp-state" metrics identify the thermodynamic optimum for cooking.
-**Plans**: TBD
+**Plans:**
+- [ ] 05-01-PLAN.md — Metrics Foundations (TDD)
+- [ ] 05-02-PLAN.md — Fulfillment Manager & Monitoring
+- [ ] 05-03-PLAN.md — Analytics Reporting & System Validation
 **UI hint**: yes
 
 ### Phase 6: Custom Engine Research
@@ -84,7 +87,7 @@
 | 2. Operational Assets | 1/1 | Completed | 2026-04-04 |
 | 3. Agentic Workforce & Logistics | 3/3 | Completed | 2026-04-04 |
 | 4. Cycle Integration | 2/2 | Completed | 2026-04-04 |
-| 5. Throughput Optimization | 0/3 | Not started | - |
+| 5. Throughput Optimization | 0/3 | In Progress | - |
 | 6. Custom Engine Research | 0/2 | Not started | - |
 | 7. Data & Metrics Foundation | 0/0 | Not started | - |
 
