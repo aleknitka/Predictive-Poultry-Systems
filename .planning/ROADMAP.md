@@ -6,7 +6,7 @@
 - [x] **Phase 3: Agentic Workforce & Logistics** - Customer and staff behavior logic.
 - [x] **Phase 4: Cycle Integration** - End-to-end fulfillment loop execution.
 - [x] **Phase 5: Throughput Optimization** - Metrics, analysis, and fulfillment tuning.
-- [ ] **Phase 6: Custom Engine Research** - Strategy for domain-specific simulation logic.
+- [x] **Phase 6: Custom Engine Research** - Strategy for domain-specific simulation logic.
 - [ ] **Phase 7: Data & Metrics Foundation** - Logging, event tracking, and SQLite integration.
 
 ## Phase Details
@@ -79,8 +79,8 @@
   1. A detailed requirements document for the custom engine is finalized.
   2. Technical design for the economic and management logic is approved.
 **Plans**:
-- [ ] 06-01-PLAN.md — Custom Engine Requirements Specification
-- [ ] 06-02-PLAN.md — Economic & Management Design Specification
+- [x] 06-01-PLAN.md — Custom Engine Requirements Specification
+- [x] 06-02-PLAN.md — Economic & Management Design Specification
 
 ## Progress Table
 
@@ -92,13 +92,16 @@
 | 4. Cycle Integration | 2/2 | Completed | 2026-04-04 |
 | 5. Throughput Optimization | 3/3 | Completed | 2026-04-04 |
 | 6. Custom Engine Research | 2/2 | Completed | 2026-04-04 |
-| 7. Data & Metrics Foundation | 0/0 | Not started | - |
+| 7. Data & Metrics Foundation | 0/2 | Not started | - |
 
 ### Phase 7: Data & Metrics Foundation
 **Goal:** Implement extensive logging for events, actions, and feed metrics into SQLite.
-**Requirements**: TBD
+**Requirements**: [MET-INF-01, MET-INF-02, MET-INF-03, MET-INF-04, MET-01, MET-02, MET-03]
 **Depends on:** Phase 6
-**Plans**: 0 plans
-
-Plans:
-- [ ] TBD (run /gsd:plan-phase 7 to break down)
+**Success Criteria** (what must be TRUE):
+  1. Simulation events are logged using `loguru` with accurate `env.now()` time stamps.
+  2. A relational SQLite schema persists simulation runs, logs, and resource metrics.
+  3. Real-time metrics are synced from salabim monitors to the database during execution.
+**Plans**:
+- [ ] 07-01-PLAN.md — Foundation - Logging & Database
+- [ ] 07-02-PLAN.md — Integration - Persistence & Monitors
