@@ -72,15 +72,15 @@
 **UI hint**: yes
 
 ### Phase 6: Custom Engine Research
-**Goal**: Prepare for the transition to a domain-specific simulation engine.
+**Goal**: Prepare for the transition to an economic and management-focused simulation engine.
 **Depends on**: Phase 5
 **Requirements**: [STRAT-01, STRAT-02]
 **Success Criteria** (what must be TRUE):
   1. A detailed requirements document for the custom engine is finalized.
-  2. Technical design for the custom thermodynamic logic is approved.
+  2. Technical design for the economic and management logic is approved.
 **Plans**:
 - [ ] 06-01-PLAN.md — Custom Engine Requirements Specification
-- [ ] 06-02-PLAN.md — Thermodynamic & Physics Design Specification
+- [ ] 06-02-PLAN.md — Economic & Management Design Specification
 
 ## Progress Table
 
@@ -91,7 +91,7 @@
 | 3. Agentic Workforce & Logistics | 3/3 | Completed | 2026-04-04 |
 | 4. Cycle Integration | 2/2 | Completed | 2026-04-04 |
 | 5. Throughput Optimization | 3/3 | Completed | 2026-04-04 |
-| 6. Custom Engine Research | 0/2 | Not started | - |
+| 6. Custom Engine Research | 2/2 | Completed | 2026-04-04 |
 | 7. Data & Metrics Foundation | 0/0 | Not started | - |
 
 ### Phase 7: Data & Metrics Foundation

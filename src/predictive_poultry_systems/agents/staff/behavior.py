@@ -5,6 +5,7 @@ from ..behavior.bt.base import Status, Node
 from ..behavior.bt.leaves import ActionNode
 from ..behavior.bt.composites import Sequence
 from .base import BaseStaff
+from ..behavior.metrics import calculate_morale, calculate_crisp_state
 
 # --- STAFF LEAF NODES ---
 
@@ -65,7 +66,8 @@ def get_default_staff_tree() -> Node:
 class ProteinUnit(sim.Component):
     """A data component representing a piece of poultry."""
 
-    pass
+    def setup(self, crispness: float = 1.0):
+        self.crispness = crispness
 
 
 class Staff(sim.Component):
@@ -75,9 +77,16 @@ class Staff(sim.Component):
 
     def setup(self, agent_data: BaseStaff):
         self.agent_data = agent_data
+        self.fatigue = 0.0
 
     def process(self):
         while True:
+            # --- MORALE UPDATE ---
+            current_morale = calculate_morale(
+                fatigue=self.fatigue, skill_level=self.agent_data.skill_level
+            )
+            self.env.fulfillment_manager.update_morale(current_morale)
+
             # 1. Idle / Wait for Work
             if not self.env.fulfillment_manager.orders:
                 yield self.wait(self.env.fulfillment_manager.order_available_signal)
@@ -90,14 +99,26 @@ class Staff(sim.Component):
             # 2. Production (Cooking)
             yield self.request(self.env.fryers)
             skill_mod = max(self.agent_data.skill_level, 0.1)
+
             # Simulate a ThermodynamicProcess (duration_mean ~ 4)
-            yield self.hold(sim.Uniform(3, 5).sample() / skill_mod)
+            cook_duration = sim.Uniform(3, 5).sample() / skill_mod
+            yield self.hold(cook_duration)
             self.release()
+
+            # --- CRISPNESS CALCULATION ---
+            # Scale cook_duration to seconds if simulation time is minutes?
+            # Assuming 1.0 sim time = 1 minute = 60s
+            cook_time_s = cook_duration * 60.0
+            crispness = calculate_crisp_state(cook_time=cook_time_s)
+            self.env.fulfillment_manager.tally_crispness(crispness)
 
             # 3. Fulfillment (Putting in cabinet)
             # Item is ready
-            item = ProteinUnit(name=f"ProteinUnit.{self.env.now()}")
+            item = ProteinUnit(
+                name=f"ProteinUnit.{self.env.now()}", crispness=crispness
+            )
             yield self.to_store(self.env.holding_cabinet, item)
 
-            # 4. Cleanup/Cycle reset
+            # 4. Cleanup/Cycle reset & Fatigue increment
             yield self.hold(0.5)
+            self.fatigue = min(1.0, self.fatigue + self.agent_data.fatigue_rate)
