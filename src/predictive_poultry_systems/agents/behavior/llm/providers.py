@@ -23,19 +23,21 @@ def get_model(model_id: Optional[str] = None) -> Model:
 
     if model_id.startswith("openrouter:"):
         model_name = model_id.split(":", 1)[1]
-        api_key = os.getenv("OPENROUTER_API_KEY", "openrouter-dummy")
+        api_key = os.getenv("OPENROUTER_API_KEY")
+        if not api_key:
+            # In a real app we might raise ValueError,
+            # but for now we fallback to a dummy if not set
+            api_key = "openrouter-dummy"
         provider = OpenAIProvider(
             base_url="https://openrouter.ai/api/v1", api_key=api_key
         )
         return OpenAIChatModel(model_name=model_name, provider=provider)
 
+    # Handle openai prefix and default case
+    model_name = model_id
     if model_id.startswith("openai:"):
         model_name = model_id.split(":", 1)[1]
-        api_key = os.getenv("OPENAI_API_KEY", "openai-dummy")
-        provider = OpenAIProvider(api_key=api_key)
-        return OpenAIChatModel(model_name=model_name, provider=provider)
 
-    # Default to OpenAI if prefix is missing
     api_key = os.getenv("OPENAI_API_KEY", "openai-dummy")
     provider = OpenAIProvider(api_key=api_key)
-    return OpenAIChatModel(model_name=model_id, provider=provider)
+    return OpenAIChatModel(model_name=model_name, provider=provider)
