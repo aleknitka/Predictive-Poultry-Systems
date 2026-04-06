@@ -12,14 +12,8 @@ def setup_simulation_logger(env: "sim.Environment") -> None:
     Args:
         env: The salabim environment to fetch current simulation time from.
     """
-    # Remove default handler only if it's the first time
-    if getattr(setup_simulation_logger, "_initialized", False):
-        return
-
-    logger.remove()  # Remove default handler
-    setup_simulation_logger._initialized = True
-
-    # Use configure to apply the patch and add the handler globally
+    # Use configure to apply the patch and add the handler globally.
+    # Note: This removes all existing handlers, including the default one.
     logger.configure(
         patcher=lambda record: record["extra"].update({"sim_time": env.now()}),
         handlers=[

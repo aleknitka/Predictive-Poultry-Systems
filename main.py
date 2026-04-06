@@ -36,6 +36,7 @@ def run_simulation(till: int = 100, seed: int = 42):
     """
     # Initialize Database and Run Metadata
     db = DatabaseManager(DEFAULT_DB_PATH)
+    db_sink_id = None
     try:
         run_id = db.create_run(seed=seed)
 
@@ -85,7 +86,8 @@ def run_simulation(till: int = 100, seed: int = 42):
 
     finally:
         # Cleanup sinks and close database
-        logger.remove(db_sink_id)
+        if db_sink_id is not None:
+            logger.remove(db_sink_id)
         db.close()
 
     return env
