@@ -1,4 +1,5 @@
 import salabim as sim
+from loguru import logger
 from predictive_poultry_systems.agents.customers.behavior import Customer
 from predictive_poultry_systems.agents.staff.behavior import Staff
 from predictive_poultry_systems.agents.staff.base import StaffRoles
@@ -6,26 +7,12 @@ from predictive_poultry_systems.agents.factories import (
     create_customer_data,
     create_staff_data,
 )
-
-
-class FulfillmentManager(sim.Component):
-    """Encapsulates order tracking and signaling."""
-
-    def setup(self):
-        self.orders = []
-        self.order_available_signal = sim.State("OrderAvailable", value=False)
-
-    def add_order(self, customer: sim.Component):
-        self.orders.append(customer)
-        self.order_available_signal.set(True)
-
-    def pop_order(self) -> sim.Component:
-        if not self.orders:
-            return None
-        order = self.orders.pop(0)
-        if not self.orders:
-            self.order_available_signal.set(False)
-        return order
+from predictive_poultry_systems.agents.simulation import FulfillmentManager
+from predictive_poultry_systems.analytics.reporter import generate_fulfillment_audit
+from predictive_poultry_systems.analytics.database import DatabaseManager
+from predictive_poultry_systems.analytics.logging import setup_simulation_logger
+from predictive_poultry_systems.analytics.sinks import MetricSink
+from predictive_poultry_systems.config import DEFAULT_DB_PATH
 
 
 class AgentGenerator(sim.Component):
@@ -43,36 +30,71 @@ class AgentGenerator(sim.Component):
             yield self.hold(sim.Exponential(10).sample())
 
 
-def run_simulation(till: int = 100):
+def run_simulation(till: int = 100, seed: int = 42):
     """
     Initialize and run the poultry fulfillment node simulation with behavioral agents.
     """
-    env = sim.Environment(trace=True, yieldless=False)
+    # Initialize Database and Run Metadata
+    db = DatabaseManager(DEFAULT_DB_PATH)
+    db_sink_id = None
+    try:
+        run_id = db.create_run(seed=seed)
 
-    # Initialize Physical Resources
-    env.kiosks = sim.Resource("Kiosks", capacity=2)
-    env.fryers = sim.Resource("Fryers", capacity=3)
+        # Initialize Salabim Environment
+        env = sim.Environment(trace=False, yieldless=False, random_seed=seed)
+        setup_simulation_logger(env)
 
-    # Initialize Operational Stores
-    env.holding_cabinet = sim.Store("HoldingCabinet", capacity=20)
+        # Add a loguru sink to persist all simulation logs to SQLite
+        def db_log_sink(message):
+            record = message.record
+            db.log_event(
+                run_id=run_id,
+                sim_time=record["extra"].get("sim_time", env.now()),
+                level=record["level"].name,
+                message=record["message"],
+            )
 
-    # Initialize Managers
-    env.fulfillment_manager = FulfillmentManager()
+        db_sink_id = logger.add(db_log_sink, level="INFO")
 
-    # Initialize Staff using factory
-    for i in range(2):
-        staff_data = create_staff_data(name=f"Staff_{i}", role=StaffRoles.FRY_COOK)
-        Staff(name=f"Staff.{i}", agent_data=staff_data)
+        # Initialize Physical Resources
+        env.kiosks = sim.Resource("Kiosks", capacity=2)
+        env.fryers = sim.Resource("Fryers", capacity=3)
 
-    # Initialize Customer Generator
-    AgentGenerator()
+        # Initialize Operational Stores
+        env.holding_cabinet = sim.Store("HoldingCabinet", capacity=20)
 
-    env.run(till=till)
+        # Initialize Managers
+        env.fulfillment_manager = FulfillmentManager()
+
+        # Initialize Metric Sink for periodic monitor persistence
+        MetricSink(db=db, run_id=run_id, interval=5.0)
+
+        # Initialize Staff using factory
+        for i in range(2):
+            staff_data = create_staff_data(name=f"Staff_{i}", role=StaffRoles.FRY_COOK)
+            Staff(name=f"Staff.{i}", agent_data=staff_data)
+
+        # Initialize Customer Generator
+        AgentGenerator()
+
+        logger.info(f"Starting simulation run {run_id} till {till}...")
+        env.run(till=till)
+
+        # Generate Performance Audit
+        generate_fulfillment_audit(env)
+        logger.info(f"Simulation run {run_id} completed.")
+
+    finally:
+        # Cleanup sinks and close database
+        if db_sink_id is not None:
+            logger.remove(db_sink_id)
+        db.close()
+
     return env
 
 
 def main():
-    run_simulation(till=100)
+    run_simulation(till=200)
 
 
 if __name__ == "__main__":

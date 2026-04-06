@@ -5,9 +5,9 @@
 - [x] **Phase 2: Operational Assets** - Models for facilities, equipment, and menus.
 - [x] **Phase 3: Agentic Workforce & Logistics** - Customer and staff behavior logic.
 - [x] **Phase 4: Cycle Integration** - End-to-end fulfillment loop execution.
-- [ ] **Phase 5: Throughput Optimization** - Metrics, analysis, and fulfillment tuning.
-- [ ] **Phase 6: Custom Engine Research** - Strategy for domain-specific simulation logic.
-- [ ] **Phase 7: Data & Metrics Foundation** - Logging, event tracking, and SQLite integration.
+- [x] **Phase 5: Throughput Optimization** - Metrics, analysis, and fulfillment tuning.
+- [x] **Phase 6: Custom Engine Research** - Strategy for domain-specific simulation logic.
+- [x] **Phase 7: Data & Metrics Foundation** - Logging, event tracking, and SQLite integration.
 
 ## Phase Details
 
@@ -62,19 +62,25 @@
 **Requirements**: [MET-01, MET-02, MET-03]
 **Success Criteria** (what must be TRUE):
   1. The system outputs throughput and fiscal yield reports.
-  2. Customer satisfaction ("stakeholder friction") is quantified and tracked.
+  2. Customer satisfaction (CSI) and Staff Morale (SMI) are quantified and tracked.
   3. "Crisp-state" metrics identify the thermodynamic optimum for cooking.
-**Plans**: TBD
+  4. Salabim monitors are integrated into FulfillmentManager.
+**Plans**:
+- [x] 05-01-PLAN.md — Metrics Foundations
+- [x] 05-02-PLAN.md — Fulfillment Manager & Monitoring
+- [x] 05-03-PLAN.md — Analytics Reporting & System Validation
 **UI hint**: yes
 
 ### Phase 6: Custom Engine Research
-**Goal**: Prepare for the transition to a domain-specific simulation engine.
+**Goal**: Prepare for the transition to an economic and management-focused simulation engine.
 **Depends on**: Phase 5
 **Requirements**: [STRAT-01, STRAT-02]
 **Success Criteria** (what must be TRUE):
   1. A detailed requirements document for the custom engine is finalized.
-  2. Technical design for the custom thermodynamic logic is approved.
-**Plans**: TBD
+  2. Technical design for the economic and management logic is approved.
+**Plans**:
+- [x] 06-01-PLAN.md — Custom Engine Requirements Specification
+- [x] 06-02-PLAN.md — Economic & Management Design Specification
 
 ## Progress Table
 
@@ -84,15 +90,18 @@
 | 2. Operational Assets | 1/1 | Completed | 2026-04-04 |
 | 3. Agentic Workforce & Logistics | 3/3 | Completed | 2026-04-04 |
 | 4. Cycle Integration | 2/2 | Completed | 2026-04-04 |
-| 5. Throughput Optimization | 0/3 | Not started | - |
-| 6. Custom Engine Research | 0/2 | Not started | - |
-| 7. Data & Metrics Foundation | 0/0 | Not started | - |
+| 5. Throughput Optimization | 3/3 | Completed | 2026-04-04 |
+| 6. Custom Engine Research | 2/2 | Completed | 2026-04-04 |
+| 7. Data & Metrics Foundation | 2/2 | Completed | 2026-04-05 |
 
 ### Phase 7: Data & Metrics Foundation
 **Goal:** Implement extensive logging for events, actions, and feed metrics into SQLite.
-**Requirements**: TBD
+**Requirements**: [MET-INF-01, MET-INF-02, MET-INF-03, MET-INF-04, MET-01, MET-02, MET-03]
 **Depends on:** Phase 6
-**Plans**: 0 plans
-
-Plans:
-- [ ] TBD (run /gsd:plan-phase 7 to break down)
+**Success Criteria** (what must be TRUE):
+  1. Simulation events are logged using `loguru` with accurate `env.now()` time stamps.
+  2. A relational SQLite schema persists simulation runs, logs, and resource metrics.
+  3. Real-time metrics are synced from salabim monitors to the database during execution.
+**Plans**:
+- [x] 07-01-PLAN.md — Foundation - Logging & Database
+- [x] 07-02-PLAN.md — Integration - Persistence & Monitors

@@ -1,8 +1,73 @@
 import salabim as sim
-from typing import Union
+from collections import deque
+from typing import Union, Any, Dict
 from .customers.base import BaseCustomer
 from .staff.base import BaseStaff
 from .behavior.bt.base import Status
+
+
+class FulfillmentManager(sim.Component):
+    """
+    Centralized orchestrator for order tracking and performance monitoring.
+    """
+
+    def setup(self):
+        self.orders: deque = deque()
+        self.order_available_signal = sim.State("OrderAvailable", value=False)
+
+        # Performance Monitors
+        self.revenue_monitor = sim.Monitor("Revenue", level=True)
+        self.sos_monitor = sim.Monitor("Speed of Service")
+
+        # CSI: level=False for arithmetic mean across all customers
+        self.satisfaction_monitor = sim.Monitor("Customer Satisfaction", level=False)
+
+        # SMI: level=True for time-weighted aggregate morale
+        self.morale_monitor = sim.Monitor("Staff Morale", level=True)
+        self.crispness_monitor = sim.Monitor("Crisp-state Compliance")
+
+        # Initialize level monitors
+        self.revenue_monitor.tally(0)
+        self.morale_monitor.tally(10.0)  # Start at max
+
+        # For SMI aggregation
+        self._staff_morale_map: Dict[str, float] = {}
+
+    def add_order(self, customer: sim.Component):
+        self.orders.append(customer)
+        self.order_available_signal.set(True)
+
+    def pop_order(self) -> Any:
+        if not self.orders:
+            return None
+        order = self.orders.popleft()
+        if not self.orders:
+            self.order_available_signal.set(False)
+        return order
+
+    def tally_revenue(self, amount: float):
+        """Increments the total revenue."""
+        current = self.revenue_monitor.get()
+        self.revenue_monitor.tally(current + amount)
+
+    def record_sos(self, duration: float):
+        """Records a completed speed of service (SoS)."""
+        self.sos_monitor.tally(duration)
+
+    def update_satisfaction(self, value: float):
+        """Updates the CSI with a new observation."""
+        self.satisfaction_monitor.tally(value)
+
+    def update_morale(self, staff_name: str, value: float):
+        """Updates the current aggregate staff morale."""
+        self._staff_morale_map[staff_name] = value
+        if self._staff_morale_map:
+            avg = sum(self._staff_morale_map.values()) / len(self._staff_morale_map)
+            self.morale_monitor.tally(avg)
+
+    def tally_crispness(self, value: float):
+        """Records the crispness score of a finished product."""
+        self.crispness_monitor.tally(value)
 
 
 class BehavioralComponent(sim.Component):

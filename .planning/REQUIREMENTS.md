@@ -29,6 +29,10 @@ High-fidelity Digital Twin simulation to optimize localized fulfillment nodes.
 - **MET-01**: Track and report operational throughput and fiscal yield.
 - **MET-02**: Measure and mitigate "stakeholder friction" (customer satisfaction levels).
 - **MET-03**: Analyze "crisp-state" metrics for thermodynamic fulfillment optimization.
+- **MET-INF-01**: Implement structured logging using `loguru` with simulation time integration.
+- **MET-INF-02**: Design and implement a relational SQLite schema for simulation persistence.
+- **MET-INF-03**: Develop a `DatabaseManager` for real-time synchronous metrics persistence.
+- **MET-INF-04**: Create a `salabim` component for periodic monitor and resource data sinking.
 
 ### STRAT: Custom Engine Exploration
 - **STRAT-01**: Research and document requirements for a domain-specific custom simulation engine.
@@ -46,17 +50,21 @@ High-fidelity Digital Twin simulation to optimize localized fulfillment nodes.
 | SETUP-02 | Phase 1 | Completed |
 | SETUP-03 | Phase 1 | Completed |
 | SIM-CORE-01 | Phase 1 | Completed |
-| OBJ-FAC-01 | Phase 2 | Pending |
-| OBJ-MAC-01 | Phase 2 | Pending |
-| OBJ-MAC-02 | Phase 2 | Pending |
-| OBJ-MENU-01 | Phase 2 | Pending |
-| AGT-CUST-01 | Phase 3 | Pending |
-| AGT-CUST-02 | Phase 3 | Pending |
-| AGT-STAF-01 | Phase 3 | Pending |
-| SIM-LOOP-01 | Phase 4 | Pending |
-| SIM-LOOP-02 | Phase 4 | Pending |
-| MET-01 | Phase 5 | Pending |
-| MET-02 | Phase 5 | Pending |
-| MET-03 | Phase 5 | Pending |
-| STRAT-01 | Phase 6 | Pending |
-| STRAT-02 | Phase 6 | Pending |
+| OBJ-FAC-01 | Phase 2 | Completed |
+| OBJ-MAC-01 | Phase 2 | Completed |
+| OBJ-MAC-02 | Phase 2 | Completed |
+| OBJ-MENU-01 | Phase 2 | Completed |
+| AGT-CUST-01 | Phase 3 | Completed |
+| AGT-CUST-02 | Phase 3 | Completed |
+| AGT-STAF-01 | Phase 3 | Completed |
+| SIM-LOOP-01 | Phase 4 | Completed |
+| SIM-LOOP-02 | Phase 4 | Completed |
+| MET-01 | Phase 5 | Completed |
+| MET-02 | Phase 5 | Completed |
+| MET-03 | Phase 5 | Completed |
+| STRAT-01 | Phase 6 | Completed |
+| STRAT-02 | Phase 6 | Completed |
+| MET-INF-01 | Phase 7 | Pending |
+| MET-INF-02 | Phase 7 | Pending |
+| MET-INF-03 | Phase 7 | Pending |
+| MET-INF-04 | Phase 7 | Pending |

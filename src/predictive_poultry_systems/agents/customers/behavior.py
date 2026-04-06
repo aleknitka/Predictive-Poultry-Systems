@@ -5,6 +5,8 @@ from ..behavior.bt.base import Status, Node
 from ..behavior.bt.leaves import ActionNode
 from ..behavior.bt.composites import Sequence
 from .base import BaseCustomer
+from ..behavior.metrics import update_satisfaction
+from predictive_poultry_systems.config import DEFAULT_ORDER_VALUE
 
 # --- CUSTOMER LEAF NODES ---
 
@@ -77,6 +79,7 @@ class Customer(sim.Component):
 
     def setup(self, agent_data: BaseCustomer):
         self.agent_data = agent_data
+        self.arrival_time = self.env.now()
 
     def process(self):
         # 1. Arrival
@@ -93,6 +96,20 @@ class Customer(sim.Component):
         # 3. Waiting for Food (from Holding Cabinet)
         # In this simplified model, customers pull from the cabinet
         yield self.from_store(self.env.holding_cabinet)
+
+        # --- METRICS COLLECTION ---
+        sos = self.env.now() - self.arrival_time
+        self.env.fulfillment_manager.record_sos(sos)
+
+        # Tally revenue
+        order_val = self.agent_data.memory.get("order_value", DEFAULT_ORDER_VALUE)
+        self.env.fulfillment_manager.tally_revenue(order_val)
+
+        # Update aggregate satisfaction
+        new_sat = update_satisfaction(
+            wait_time=sos, base_satisfaction=self.agent_data.satisfaction
+        )
+        self.env.fulfillment_manager.update_satisfaction(new_sat)
 
         # 4. Consumption
         yield self.hold(sim.Uniform(5, 15).sample())
